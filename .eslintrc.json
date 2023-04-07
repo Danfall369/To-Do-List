@@ -17,12 +17,7 @@
       "import/extensions": [ 1, {
         "js": "always", "json": "always"
       }],
-      "import/no-extraneous-dependencies": ["error", {
-        "devDependencies": [
-          "**/*.test.js",
-          "**/*.test.tsx"
-       ]
-      }]
+      "import/no-extraneous-dependencies": ["error", {"projectDependencies": false}]
     },
     "ignorePatterns": [
       "dist/",
