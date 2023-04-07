@@ -1,5 +1,4 @@
 import { JSDOM } from 'jsdom';
-// eslint-disable-next-line import/no-extraneous-dependencies
 import 'jest-localstorage-mock';
 import {
   addTask, saveTask, removeItem,
