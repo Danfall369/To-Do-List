@@ -18,7 +18,10 @@
         "js": "always", "json": "always"
       }],
       "import/no-extraneous-dependencies": ["error", {
-        "devDependencies": true
+        "devDependencies": [
+          "**/*.test.js",
+          "**/*.test.tsx"
+       ]
       }]
     },
     "ignorePatterns": [
