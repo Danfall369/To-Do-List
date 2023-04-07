@@ -65,16 +65,16 @@ describe('list test', () => {
   });
 
   test('Clear Complete', () => {
-    let tasks = [{ description: 'input', completed: false, index: 0 }];
-    clearCompleted();
-
-    const clearButton = document.getElementById('clearButton');
-    clearButton.addEventListener('click', () => {
-      tasks = tasks.filter((task) => !task.completed);
-      taskList();
-      saveTask();
+    const tasks = [
+      { description: 'task 1', completed: false, index: 0 },
+      { description: 'task 2', completed: true, index: 1 },
+    ];
+    tasks.forEach((task) => {
+      const listItem = document.createElement('li');
+      taskList(listItem, task);
     });
-    clearButton.click();
-    expect(tasks.length).toEqual(0);
+    clearCompleted();
+    const todoList = document.getElementById('todo-list');
+    expect(todoList.children.length).toEqual(0);
   });
 });
