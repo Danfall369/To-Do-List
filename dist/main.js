@@ -423,8 +423,11 @@ module.exports = function (cssWithMappingToString) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Checkbox": () => (/* binding */ Checkbox),
+/* harmony export */   "addNewTask": () => (/* binding */ addNewTask),
 /* harmony export */   "addTask": () => (/* binding */ addTask),
 /* harmony export */   "clearCompleted": () => (/* binding */ clearCompleted),
+/* harmony export */   "editDescription": () => (/* binding */ editDescription),
+/* harmony export */   "mainTitle": () => (/* binding */ mainTitle),
 /* harmony export */   "removeItem": () => (/* binding */ removeItem),
 /* harmony export */   "saveTask": () => (/* binding */ saveTask),
 /* harmony export */   "taskList": () => (/* binding */ taskList)
@@ -458,6 +461,20 @@ function Checkbox(task, listItem) {
   listItem.appendChild(checkbox);
 }
 
+function editDescription(task, taskDiv) {
+  const inputTask = document.createElement('input');
+  inputTask.classList.add('taskDiv');
+  inputTask.value = task.description;
+  taskDiv.replaceWith(inputTask);
+  inputTask.focus();
+  inputTask.addEventListener('blur', () => {
+    task.description = inputTask.value;
+    inputTask.replaceWith(taskDiv);
+    taskDiv.innerText = task.description;
+    saveTask();
+  });
+}
+
 function taskList() {
   const taskListElement = document.getElementById('todo-list');
   taskListElement.innerHTML = '';
@@ -472,20 +489,7 @@ function taskList() {
     taskDiv.classList.add('taskDiv');
     taskDiv.innerText = task.description;
 
-    const editDescription = () => {
-      const inputTask = document.createElement('input');
-      inputTask.classList.add('taskDiv');
-      inputTask.value = task.description;
-      taskDiv.replaceWith(inputTask);
-      inputTask.focus();
-      inputTask.addEventListener('blur', () => {
-        task.description = inputTask.value;
-        inputTask.replaceWith(taskDiv);
-        taskDiv.innerText = task.description;
-        saveTask();
-      });
-    };
-    taskDiv.addEventListener('dblclick', editDescription);
+    taskDiv.addEventListener('dblclick', () => editDescription(task, taskDiv));
     listItem.appendChild(taskDiv);
 
     const dotsDiv = document.createElement('div');
@@ -507,17 +511,20 @@ function taskList() {
   });
 }
 
+function addNewTask() {
+  const input = document.getElementById('addItem');
+  if (!input.value) return;
+  const newTask = { description: input.value, completed: false, index: tasks.length + 1 };
+  tasks.push(newTask);
+  taskList();
+  input.value = '';
+  saveTask();
+}
+
 function addTask() {
   const input = document.getElementById('addItem');
 
-  function addNewTask() {
-    if (!input.value) return;
-    const newTask = { description: input.value, completed: false, index: tasks.length + 1 };
-    tasks.push(newTask);
-    taskList();
-    input.value = '';
-    saveTask();
-  }
+  addNewTask();
 
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -536,15 +543,16 @@ function clearCompleted() {
   });
 }
 
-const demoInput = document.getElementById('Demo');
-
-const demoInputValue = localStorage.getItem('demoInputValue');
-if (demoInputValue) {
-  demoInput.value = demoInputValue;
+function mainTitle() {
+  const input = document.getElementById('Demo');
+  const inputValue = localStorage.getItem('inputValue');
+  if (inputValue) {
+    input.value = inputValue;
+  }
+  input.addEventListener('input', () => {
+    localStorage.setItem('inputValue', input.value);
+  });
 }
-demoInput.addEventListener('change', () => {
-  localStorage.setItem('demoInputValue', demoInput.value);
-});
 
 /***/ })
 /******/ 	]);
@@ -634,6 +642,7 @@ window.addEventListener('load', () => {
   (0,_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.addTask)();
   (0,_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.taskList)(_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.Checkbox);
   (0,_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.clearCompleted)();
+  (0,_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.mainTitle)();
 });
 (0,_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.taskList)(_modules_ToDoList_js__WEBPACK_IMPORTED_MODULE_1__.removeItem);
 })();
