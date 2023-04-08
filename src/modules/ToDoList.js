@@ -27,6 +27,20 @@ export function Checkbox(task, listItem) {
   listItem.appendChild(checkbox);
 }
 
+export function editDescription(task, taskDiv) {
+  const inputTask = document.createElement('input');
+  inputTask.classList.add('taskDiv');
+  inputTask.value = task.description;
+  taskDiv.replaceWith(inputTask);
+  inputTask.focus();
+  inputTask.addEventListener('blur', () => {
+    task.description = inputTask.value;
+    inputTask.replaceWith(taskDiv);
+    taskDiv.innerText = task.description;
+    saveTask();
+  });
+}
+
 export function taskList() {
   const taskListElement = document.getElementById('todo-list');
   taskListElement.innerHTML = '';
@@ -41,20 +55,7 @@ export function taskList() {
     taskDiv.classList.add('taskDiv');
     taskDiv.innerText = task.description;
 
-    const editDescription = () => {
-      const inputTask = document.createElement('input');
-      inputTask.classList.add('taskDiv');
-      inputTask.value = task.description;
-      taskDiv.replaceWith(inputTask);
-      inputTask.focus();
-      inputTask.addEventListener('blur', () => {
-        task.description = inputTask.value;
-        inputTask.replaceWith(taskDiv);
-        taskDiv.innerText = task.description;
-        saveTask();
-      });
-    };
-    taskDiv.addEventListener('dblclick', editDescription);
+    taskDiv.addEventListener('dblclick', () => editDescription(task, taskDiv));
     listItem.appendChild(taskDiv);
 
     const dotsDiv = document.createElement('div');
@@ -76,17 +77,20 @@ export function taskList() {
   });
 }
 
+export function addNewTask() {
+  const input = document.getElementById('addItem');
+  if (!input.value) return;
+  const newTask = { description: input.value, completed: false, index: tasks.length + 1 };
+  tasks.push(newTask);
+  taskList();
+  input.value = '';
+  saveTask();
+}
+
 export function addTask() {
   const input = document.getElementById('addItem');
 
-  function addNewTask() {
-    if (!input.value) return;
-    const newTask = { description: input.value, completed: false, index: tasks.length + 1 };
-    tasks.push(newTask);
-    taskList();
-    input.value = '';
-    saveTask();
-  }
+  addNewTask();
 
   input.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
@@ -104,13 +108,3 @@ export function clearCompleted() {
     saveTask();
   });
 }
-
-const demoInput = document.getElementById('Demo');
-
-const demoInputValue = localStorage.getItem('demoInputValue');
-if (demoInputValue) {
-  demoInput.value = demoInputValue;
-}
-demoInput.addEventListener('change', () => {
-  localStorage.setItem('demoInputValue', demoInput.value);
-});
