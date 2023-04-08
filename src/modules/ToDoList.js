@@ -108,3 +108,14 @@ export function clearCompleted() {
     saveTask();
   });
 }
+
+export function mainTitle() {
+  const input = document.getElementById('Demo');
+  const inputValue = localStorage.getItem('inputValue');
+  if (inputValue) {
+    input.value = inputValue;
+  }
+  input.addEventListener('input', () => {
+    localStorage.setItem('inputValue', input.value);
+  });
+}
